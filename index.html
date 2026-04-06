@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usaha Jana – Everything's About Perfection</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Raleway:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0057b8;
+    --blue-dark: #003d82;
+    --blue-light: #1a7fe8;
+    --accent: #00c6ff;
+    --gold: #f5a623;
+    --white: #ffffff;
+    --dark: #0a0f1e;
+    --gray: #f4f7fb;
+    --text: #1a2340;
+    --text-light: #5a6a8a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Raleway', sans-serif;
+    color: var(--text);
+    background: #fff;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 70px;
+    background: rgba(10,15,30,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,198,255,0.15);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo img { height: 38px; }
+  .nav-logo span { color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.15rem; letter-spacing: 1px; }
+  .nav-logo span em { color: var(--accent); font-style: normal; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; transition: color .2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: #fff; border: none; padding: 10px 24px; border-radius: 50px;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.82rem;
+    cursor: pointer; letter-spacing: 0.5px; transition: transform .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,198,255,0.4); }
+
+  /* ── HERO SLIDER ── */
+  .hero {
+    position: relative; height: 100vh; overflow: hidden;
+    margin-top: 70px;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 1s ease;
+    background-size: cover; background-position: center;
+  }
+  .slide.active { opacity: 1; }
+  .slide-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,30,80,0.75) 0%, rgba(0,87,184,0.4) 60%, rgba(0,0,0,0.3) 100%);
+  }
+  .slide-content {
+    position: absolute; bottom: 120px; left: 80px; max-width: 640px;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+  .slide.active .slide-content { opacity: 1; transform: translateY(0); }
+  .slide-tag {
+    display: inline-block; background: var(--accent); color: #000;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem;
+    padding: 4px 14px; border-radius: 50px; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .slide-content h1 {
+    font-family: 'Montserrat', sans-serif; font-weight: 900;
+    font-size: clamp(2rem, 4vw, 3.2rem); color: #fff; line-height: 1.1;
+    margin-bottom: 16px; text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+  .slide-content p {
+    color: rgba(255,255,255,0.85); font-size: 1rem; line-height: 1.7; margin-bottom: 28px;
+  }
+  .slide-btn {
+    display: inline-block; padding: 14px 36px; border-radius: 50px;
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 700;
+    font-size: 0.88rem; text-decoration: none; letter-spacing: 0.5px;
+    box-shadow: 0 8px 30px rgba(0,87,184,0.5); transition: transform .2s, box-shadow .2s;
+  }
+  .slide-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,198,255,0.5); }
+
+  /* slider nav */
+  .slider-nav {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; z-index: 10;
+  }
+  .slider-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.4); cursor: pointer;
+    transition: background .3s, transform .3s;
+  }
+  .slider-dot.active { background: var(--accent); transform: scale(1.3); }
+
+  .slider-arrow {
+    position: absolute; top: 50%; z-index: 10;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff; font-size: 1.4rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transform: translateY(-50%);
+    transition: background .2s, transform .2s;
+  }
+  .slider-arrow:hover { background: var(--blue); transform: translateY(-50%) scale(1.08); }
+  .slider-arrow.prev { left: 30px; }
+  .slider-arrow.next { right: 30px; }
+
+  /* ── PROGRAM BANNER ── */
+  .program-banner {
+    background: #fff; padding: 24px 80px;
+    border-bottom: 3px solid var(--blue);
+    display: flex; align-items: center; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .prog-flag { width: 56px; }
+  .prog-text { flex: 1; }
+  .prog-text h3 {
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.95rem;
+    color: var(--blue-dark); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .prog-text p { color: var(--text-light); font-size: 0.82rem; margin-top: 4px; }
+  .prog-icons { display: flex; gap: 14px; }
+  .prog-icon-btn {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--blue); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; cursor: pointer; transition: background .2s;
+  }
+  .prog-icon-btn:hover { background: var(--accent); }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 80px 80px; }
+  .section-label {
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.72rem;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Montserrat', sans-serif; font-weight: 900;
+    font-size: clamp(1.6rem, 3vw, 2.4rem); color: var(--dark); line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .section-sub { color: var(--text-light); font-size: 1rem; max-width: 540px; line-height: 1.7; }
+
+  /* ── SERVICES ── */
+  .services-section { background: var(--dark); color: #fff; }
+  .services-section .section-title { color: #fff; }
+  .services-section .section-sub { color: rgba(255,255,255,0.6); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 52px;
+  }
+  .service-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,198,255,0.12);
+    border-radius: 16px; padding: 32px 28px;
+    transition: transform .3s, border-color .3s, background .3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    opacity: 0; transition: opacity .3s;
+  }
+  .service-card:hover { transform: translateY(-6px); border-color: rgba(0,198,255,0.4); background: rgba(255,255,255,0.07); }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 20px;
+  }
+  .service-card h3 {
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.05rem;
+    color: #fff; margin-bottom: 12px;
+  }
+  .service-card ul { list-style: none; }
+  .service-card ul li {
+    color: rgba(255,255,255,0.65); font-size: 0.85rem; padding: 4px 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .service-card ul li::before { content: '▸'; color: var(--accent); font-size: 0.75rem; }
+
+  /* ── GALLERY ── */
+  .gallery-section { background: var(--gray); }
+  .gallery-track-wrap {
+    overflow: hidden; margin-top: 48px; cursor: grab; user-select: none;
+    border-radius: 16px;
+  }
+  .gallery-track-wrap:active { cursor: grabbing; }
+  .gallery-track {
+    display: flex; gap: 20px;
+    animation: galleryScroll 30s linear infinite;
+    width: max-content;
+  }
+  .gallery-track:hover { animation-play-state: paused; }
+  .gallery-track-wrap.dragging .gallery-track { animation-play-state: paused; }
+  @keyframes galleryScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .gallery-item {
+    width: 320px; height: 220px; border-radius: 14px; overflow: hidden;
+    flex-shrink: 0; position: relative;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .gallery-item:hover img { transform: scale(1.06); }
+  .gallery-item-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(0deg, rgba(0,30,80,0.85) 0%, transparent 100%);
+    color: #fff; font-size: 0.78rem; font-weight: 600;
+  }
+
+  /* Gallery placeholder colors */
+  .gp1 { background: linear-gradient(135deg, #0057b8, #00c6ff); }
+  .gp2 { background: linear-gradient(135deg, #1a3a6b, #0057b8); }
+  .gp3 { background: linear-gradient(135deg, #00c6ff, #0057b8); }
+  .gp4 { background: linear-gradient(135deg, #003d82, #1a7fe8); }
+  .gp5 { background: linear-gradient(135deg, #0f2a5c, #00c6ff); }
+  .gp6 { background: linear-gradient(135deg, #1a7fe8, #003d82); }
+  .gp7 { background: linear-gradient(135deg, #0057b8, #003d82); }
+  .gp8 { background: linear-gradient(135deg, #00c6ff, #1a3a6b); }
+  .gallery-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; opacity: 0.6;
+  }
+
+  /* ── VIDEO SECTION ── */
+  .video-section {
+    background: var(--dark); text-align: center;
+    padding: 80px 80px;
+  }
+  .video-section .section-title { color: #fff; }
+  .video-section .section-sub { color: rgba(255,255,255,0.6); margin: 0 auto 48px; }
+  .video-wrap {
+    max-width: 800px; margin: 0 auto;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,87,184,0.5);
+    border: 2px solid rgba(0,198,255,0.2);
+    position: relative; aspect-ratio: 16/9;
+    background: #000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .play-btn {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: #fff; cursor: pointer;
+    box-shadow: 0 0 0 16px rgba(0,198,255,0.12);
+    transition: transform .3s;
+  }
+  .play-btn:hover { transform: scale(1.1); }
+  .video-logo {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .video-logo-text {
+    font-family: 'Montserrat', sans-serif; font-weight: 900;
+    font-size: 2.5rem; color: rgba(255,255,255,0.12); letter-spacing: 4px;
+  }
+  .video-tagline {
+    font-family: 'Raleway', sans-serif; font-style: italic;
+    color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 8px;
+  }
+
+  /* ── AWARDS ── */
+  .awards-section { background: #fff; text-align: center; }
+  .awards-grid {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 40px; margin-top: 48px;
+  }
+  .award-item {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .award-badge {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; color: #fff;
+    box-shadow: 0 8px 24px rgba(0,87,184,0.25);
+  }
+  .award-name { font-size: 0.78rem; font-weight: 700; color: var(--text-light); text-align: center; max-width: 90px; }
+
+  /* ── CLIENTS ── */
+  .clients-section { background: var(--dark); text-align: center; overflow: hidden; padding-bottom: 60px; }
+  .clients-section .section-title { color: #fff; }
+  .clients-track-wrap { overflow: hidden; margin-top: 48px; }
+  .clients-track {
+    display: flex; gap: 32px;
+    animation: clientScroll 22s linear infinite;
+    width: max-content;
+  }
+  .clients-track:hover { animation-play-state: paused; }
+  @keyframes clientScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .client-logo {
+    flex-shrink: 0;
+    width: 160px; height: 80px; border-radius: 12px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px 20px; transition: background .3s, border-color .3s;
+  }
+  .client-logo:hover { background: rgba(255,255,255,0.12); border-color: rgba(0,198,255,0.3); }
+  .client-logo-text {
+    font-family: 'Montserrat', sans-serif; font-weight: 800;
+    font-size: 0.82rem; color: rgba(255,255,255,0.7);
+    text-align: center; letter-spacing: 1px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 50%, var(--blue-light) 100%);
+    text-align: center; padding: 100px 80px;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .cta-section .section-title { color: #fff; font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+  .cta-section .section-sub { color: rgba(255,255,255,0.8); margin: 0 auto 40px; }
+  .cta-btn {
+    display: inline-block; padding: 18px 48px; border-radius: 50px;
+    background: #fff; color: var(--blue-dark);
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.92rem;
+    text-decoration: none; letter-spacing: 0.5px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25); transition: transform .2s, box-shadow .2s;
+  }
+  .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(0,0,0,0.35); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #060b18; color: rgba(255,255,255,0.6);
+    padding: 60px 80px 30px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 48px;
+    margin-bottom: 48px;
+  }
+  .footer-brand h4 {
+    font-family: 'Montserrat', sans-serif; font-weight: 900;
+    color: #fff; font-size: 1.4rem; letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .footer-brand h4 em { color: var(--accent); font-style: normal; }
+  .footer-brand p { font-size: 0.85rem; line-height: 1.8; }
+  .footer-col h5 {
+    font-family: 'Montserrat', sans-serif; font-weight: 700; color: #fff;
+    font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col ul li a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.85rem; transition: color .2s; }
+  .footer-col ul li a:hover { color: var(--accent); }
+  .footer-contact p { font-size: 0.85rem; line-height: 1.9; }
+  .footer-contact strong { color: #fff; }
+  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.78rem;
+  }
+  .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .footer-bottom a:hover { color: var(--accent); }
+  .social-icons { display: flex; gap: 14px; }
+  .social-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.85rem;
+    transition: background .2s, color .2s;
+  }
+  .social-icon:hover { background: var(--blue); color: #fff; }
+
+  /* ── TAGLINE STRIP ── */
+  .tagline-strip {
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue), var(--blue-light), var(--accent), var(--blue-light), var(--blue), var(--blue-dark));
+    background-size: 300% 100%;
+    animation: gradientShift 6s ease infinite;
+    text-align: center; padding: 18px;
+  }
+  @keyframes gradientShift {
+    0%,100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+  .tagline-strip p {
+    font-family: 'Montserrat', sans-serif; font-weight: 800;
+    font-size: 0.88rem; color: #fff; letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  /* ── STATS ── */
+  .stats-section {
+    background: var(--blue-dark); padding: 60px 80px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 24px; text-align: center;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Montserrat', sans-serif; font-weight: 900;
+    font-size: 2.8rem; color: var(--accent); line-height: 1;
+  }
+  .stat-label { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 8px; font-weight: 600; }
+
+  /* responsive rough */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .stats-section { grid-template-columns: 1fr 1fr; }
+    .program-banner { padding: 20px 24px; }
+    .slide-content { left: 24px; bottom: 100px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <span>USAHA <em>JANA</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Request Meeting</button>
+</nav>
+
+<!-- HERO SLIDER -->
+<div class="hero" id="hero">
+
+  <div class="slide active" style="background-color:#0a1a3a">
+    <div class="slide-overlay"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.15">
+      <svg width="900" height="600" viewBox="0 0 900 600"><defs><radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0057b8" stop-opacity="0"/></radialGradient></defs><ellipse cx="450" cy="300" rx="400" ry="280" fill="url(#g1)"/></svg>
+    </div>
+    <div class="slide-content">
+      <span class="slide-tag">Event Management</span>
+      <h1>Creating Unforgettable Event Experiences</h1>
+      <p>From grand conferences to intimate seminars — we manage every detail with precision and passion. Everything's about perfection.</p>
+      <a href="#" class="slide-btn">Explore Our Work</a>
+    </div>
+  </div>
+
+  <div class="slide" style="background-color:#0d1f45">
+    <div class="slide-overlay"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.12">
+      <svg width="900" height="600" viewBox="0 0 900 600"><defs><radialGradient id="g2" cx="30%" cy="60%" r="60%"><stop offset="0%" stop-color="#1a7fe8"/><stop offset="100%" stop-color="#003d82" stop-opacity="0"/></radialGradient></defs><ellipse cx="300" cy="350" rx="450" ry="300" fill="url(#g2)"/></svg>
+    </div>
+    <div class="slide-content">
+      <span class="slide-tag">Branding & Design</span>
+      <h1>Where Creativity Meets Strategic Vision</h1>
+      <p>Award-winning branding, creative concepts, digital design and 3D structure — we build identities that resonate and inspire.</p>
+      <a href="#" class="slide-btn">View Portfolio</a>
+    </div>
+  </div>
+
+  <div class="slide" style="background-color:#081530">
+    <div class="slide-overlay"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.15">
+      <svg width="900" height="600" viewBox="0 0 900 600"><defs><radialGradient id="g3" cx="70%" cy="40%" r="55%"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0057b8" stop-opacity="0"/></radialGradient></defs><ellipse cx="600" cy="250" rx="400" ry="300" fill="url(#g3)"/></svg>
+    </div>
+    <div class="slide-content">
+      <span class="slide-tag">Video & Multimedia</span>
+      <h1>Cinematic Stories for Every Occasion</h1>
+      <p>Corporate videos, MCP productions, event coverage and storyboards — we capture your moments with cinematic quality.</p>
+      <a href="#" class="slide-btn">Watch Showreel</a>
+    </div>
+  </div>
+
+  <div class="slide" style="background-color:#0a1830">
+    <div class="slide-overlay"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.12">
+      <svg width="900" height="600" viewBox="0 0 900 600"><defs><radialGradient id="g4" cx="50%" cy="70%" r="60%"><stop offset="0%" stop-color="#1a7fe8"/><stop offset="100%" stop-color="#060b18" stop-opacity="0"/></radialGradient></defs><ellipse cx="450" cy="420" rx="480" ry="260" fill="url(#g4)"/></svg>
+    </div>
+    <div class="slide-content">
+      <span class="slide-tag">Program Madani Rakyat</span>
+      <h1>Serving the Nation, Delivering Excellence</h1>
+      <p>Proud partner of government programmes nationwide — bringing communities together through memorable, impactful events.</p>
+      <a href="#" class="slide-btn">Learn More</a>
+    </div>
+  </div>
+
+  <!-- Arrows -->
+  <button class="slider-arrow prev" onclick="changeSlide(-1)">&#8249;</button>
+  <button class="slider-arrow next" onclick="changeSlide(1)">&#8250;</button>
+
+  <!-- Dots -->
+  <div class="slider-nav" id="sliderDots"></div>
+</div>
+
+<!-- PROGRAM BANNER -->
+<div class="program-banner">
+  <div style="font-size:2rem">🇲🇾</div>
+  <div class="prog-text">
+    <h3>Program Madani Rakyat (Johor Timur, Johor Selatan, & Johor Sabah)</h3>
+    <p>Kementerian Kemajuan Desa dan Wilayah (KKDW) | 2024 &nbsp;•&nbsp; Kementerian Ekonomi | 2024 &nbsp;•&nbsp; Kementerian Perdagangan Dalam Negeri dan Kos Sara Hidup (KPDN) | 2024</p>
+  </div>
+  <div class="prog-icons">
+    <div class="prog-icon-btn">🎥</div>
+    <div class="prog-icon-btn">📸</div>
+    <div class="prog-icon-btn">📋</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="services-section">
+  <div class="section-label">Our Services</div>
+  <div class="section-title">Everything We Do,<br>Done with Perfection</div>
+  <div class="section-sub">A full-spectrum creative and event agency dedicated to delivering remarkable results for every client.</div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🎪</div>
+      <h3>Event Management</h3>
+      <ul>
+        <li>Exhibition</li>
+        <li>Conference</li>
+        <li>Gala Dinner</li>
+        <li>Seminar</li>
+        <li>Carnival</li>
+        <li>Launching Ceremony</li>
+        <li>Sidetrack & Montage</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <h3>Branding & Design</h3>
+      <ul>
+        <li>Key Art Visual</li>
+        <li>Creative Concept</li>
+        <li>Graphic Design</li>
+        <li>Digital Design</li>
+        <li>Printed Design</li>
+        <li>Website Layout</li>
+        <li>3D Structure</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎬</div>
+      <h3>Video Multimedia Services</h3>
+      <ul>
+        <li>Corporate Video</li>
+        <li>Multimedia Presentation</li>
+        <li>Multi Camera Production (MCP)</li>
+        <li>Launching Video (Montage)</li>
+        <li>Event Coverage Video</li>
+        <li>Storyboard</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔊</div>
+      <h3>Event Equipment Services</h3>
+      <ul>
+        <li>Sound System</li>
+        <li>Stage Lighting Service</li>
+        <li>LED Backdrop</li>
+        <li>Truss Systems</li>
+        <li>Photobooth</li>
+        <li>Moving LED Truck</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <h3>Media Planner</h3>
+      <ul>
+        <li>Social Media Posting</li>
+        <li>Visualisation</li>
+        <li>Copywriting</li>
+        <li>Media Content</li>
+        <li>Advertising</li>
+        <li>Monitoring Data</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌟</div>
+      <h3>Full Event Production</h3>
+      <ul>
+        <li>End-to-End Management</li>
+        <li>Talent & Emcee</li>
+        <li>Catering Coordination</li>
+        <li>Logistics & Transport</li>
+        <li>Security & Protocol</li>
+        <li>Post-Event Report</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Events Completed</div></div>
+  <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Happy Clients</div></div>
+  <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label">Years Experience</div></div>
+  <div class="stat-item"><div class="stat-num">30+</div><div class="stat-label">Awards & Recognitions</div></div>
+</div>
+
+<!-- FEATURED EVENTS GALLERY -->
+<section id="gallery" class="gallery-section">
+  <div class="section-label">Featured Events</div>
+  <div class="section-title">Gallery of Memorable Moments</div>
+  <div class="section-sub">Drag to explore our portfolio of events — or just sit back and watch it roll.</div>
+
+  <div class="gallery-track-wrap" id="galleryWrap">
+    <div class="gallery-track" id="galleryTrack">
+      <!-- Items duplicated for infinite scroll -->
+      <div class="gallery-item"><div class="gallery-placeholder gp1">🎪</div><div class="gallery-item-label">Majlis Perasmian – Kuala Lumpur 2024</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp2">🎤</div><div class="gallery-item-label">Corporate Conference – Johor 2024</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp3">🏆</div><div class="gallery-item-label">Gala Dinner – Pullman KLCC 2023</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp4">🎬</div><div class="gallery-item-label">Product Launch – Putrajaya 2024</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp5">🌟</div><div class="gallery-item-label">Program Madani Rakyat – Sabah</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp6">🎭</div><div class="gallery-item-label">Cultural Exhibition – Penang 2023</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp7">🎡</div><div class="gallery-item-label">Community Carnival – Selangor</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp8">📸</div><div class="gallery-item-label">Brand Activation – KL 2024</div></div>
+      <!-- Duplicates for seamless loop -->
+      <div class="gallery-item"><div class="gallery-placeholder gp1">🎪</div><div class="gallery-item-label">Majlis Perasmian – Kuala Lumpur 2024</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp2">🎤</div><div class="gallery-item-label">Corporate Conference – Johor 2024</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp3">🏆</div><div class="gallery-item-label">Gala Dinner – Pullman KLCC 2023</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp4">🎬</div><div class="gallery-item-label">Product Launch – Putrajaya 2024</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp5">🌟</div><div class="gallery-item-label">Program Madani Rakyat – Sabah</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp6">🎭</div><div class="gallery-item-label">Cultural Exhibition – Penang 2023</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp7">🎡</div><div class="gallery-item-label">Community Carnival – Selangor</div></div>
+      <div class="gallery-item"><div class="gallery-placeholder gp8">📸</div><div class="gallery-item-label">Brand Activation – KL 2024</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO SECTION -->
+<section class="video-section">
+  <div class="section-label">Showreel</div>
+  <div class="section-title" style="color:#fff">Delivering On Our Clients' Expectations,<br>And More</div>
+  <div class="section-sub">Watch how we transform ideas into extraordinary experiences.</div>
+
+  <div class="video-wrap">
+    <div class="video-logo">
+      <div class="video-logo-text">USAHA JANA</div>
+      <div class="video-tagline">Everything's About Perfection</div>
+    </div>
+    <div class="play-btn" onclick="this.style.transform='scale(0.9)';setTimeout(()=>this.style.transform='scale(1)',200)">▶</div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section class="awards-section">
+  <div class="section-label">Recognition</div>
+  <div class="section-title" style="text-align:center">Awards & Recognitions</div>
+  <div class="awards-grid">
+    <div class="award-item"><div class="award-badge">🏆</div><div class="award-name">Best Event Agency 2023</div></div>
+    <div class="award-item"><div class="award-badge">🥇</div><div class="award-name">SME Excellence Award</div></div>
+    <div class="award-item"><div class="award-badge">⭐</div><div class="award-name">SCORE++ Rated</div></div>
+    <div class="award-item"><div class="award-badge">🎖️</div><div class="award-name">Trusted Supplier MyGovt</div></div>
+    <div class="award-item"><div class="award-badge">💎</div><div class="award-name">Creative Excellence</div></div>
+    <div class="award-item"><div class="award-badge">🌟</div><div class="award-name">5-Star Client Rating</div></div>
+  </div>
+</section>
+
+<!-- TAGLINE STRIP -->
+<div class="tagline-strip">
+  <p>Transforming Events Into Memorable Experiences — Authentic &amp; Genuinely Engaging — Everything's About Perfection</p>
+</div>
+
+<!-- CLIENTS SHOWREEL -->
+<section id="clients" class="clients-section">
+  <div class="section-label">Our Clients</div>
+  <div class="section-title" style="color:#fff">Trusted by Leading Organisations</div>
+
+  <div class="clients-track-wrap">
+    <div class="clients-track" id="clientsTrack">
+      <div class="client-logo"><div class="client-logo-text">KEMENTERIAN EKONOMI</div></div>
+      <div class="client-logo"><div class="client-logo-text">SME CORP MALAYSIA</div></div>
+      <div class="client-logo"><div class="client-logo-text">INSPEN</div></div>
+      <div class="client-logo"><div class="client-logo-text">KKDW</div></div>
+      <div class="client-logo"><div class="client-logo-text">KPDN</div></div>
+      <div class="client-logo"><div class="client-logo-text">PERBADANAN PUTRAJAYA</div></div>
+      <div class="client-logo"><div class="client-logo-text">BANK NEGARA</div></div>
+      <div class="client-logo"><div class="client-logo-text">PETRONAS</div></div>
+      <div class="client-logo"><div class="client-logo-text">MAYBANK</div></div>
+      <div class="client-logo"><div class="client-logo-text">TELEKOM MALAYSIA</div></div>
+      <!-- duplicates -->
+      <div class="client-logo"><div class="client-logo-text">KEMENTERIAN EKONOMI</div></div>
+      <div class="client-logo"><div class="client-logo-text">SME CORP MALAYSIA</div></div>
+      <div class="client-logo"><div class="client-logo-text">INSPEN</div></div>
+      <div class="client-logo"><div class="client-logo-text">KKDW</div></div>
+      <div class="client-logo"><div class="client-logo-text">KPDN</div></div>
+      <div class="client-logo"><div class="client-logo-text">PERBADANAN PUTRAJAYA</div></div>
+      <div class="client-logo"><div class="client-logo-text">BANK NEGARA</div></div>
+      <div class="client-logo"><div class="client-logo-text">PETRONAS</div></div>
+      <div class="client-logo"><div class="client-logo-text">MAYBANK</div></div>
+      <div class="client-logo"><div class="client-logo-text">TELEKOM MALAYSIA</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-title">Let's Make Something Memorable Together</div>
+  <div class="section-sub">Ready to bring your vision to life? Our team is here to help you create an extraordinary experience.</div>
+  <a href="mailto:admin@usaha-jana.com" class="cta-btn">Request a Meeting</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h4>USAHA <em>JANA</em></h4>
+      <p>We are an award-winning event management and creative agency based in Malaysia. From concept to completion, we deliver memorable experiences with uncompromising quality.</p>
+      <div class="social-icons" style="margin-top:20px">
+        <a class="social-icon" href="#">f</a>
+        <a class="social-icon" href="#">in</a>
+        <a class="social-icon" href="#">ig</a>
+        <a class="social-icon" href="#">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#">Event Management</a></li>
+        <li><a href="#">Branding & Design</a></li>
+        <li><a href="#">Video Multimedia</a></li>
+        <li><a href="#">Equipment Services</a></li>
+        <li><a href="#">Media Planner</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">Awards</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-contact">
+      <h5>Contact Us</h5>
+      <p>
+        <strong>Address:</strong><br>
+        No 19-2, Jalan Equine 13C, Taman Equine,<br>43300 Seri Kembangan, Selangor Darul Ehsan<br><br>
+        <strong>Email:</strong><br>
+        admin@usaha-jana.com<br><br>
+        <strong>Phone:</strong><br>
+        +603-XXXX XXXX
+      </p>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <span>© 2025 Usaha Jana. All rights reserved.</span>
+    <div>
+      <a href="#">Terms of Use</a> &nbsp;|&nbsp; <a href="#">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── HERO SLIDER ──
+const slides = document.querySelectorAll('.slide');
+const dotsWrap = document.getElementById('sliderDots');
+let current = 0;
+let autoTimer;
+
+// build dots
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'slider-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsWrap.appendChild(d);
+});
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  dotsWrap.children[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  dotsWrap.children[current].classList.add('active');
+  resetTimer();
+}
+
+function changeSlide(dir) { goTo(current + dir); }
+
+function resetTimer() {
+  clearInterval(autoTimer);
+  autoTimer = setInterval(() => goTo(current + 1), 8000);
+}
+
+resetTimer(); // start auto-advance every 8 seconds
+
+// ── GALLERY DRAG ──
+const galleryWrap = document.getElementById('galleryWrap');
+const galleryTrack = document.getElementById('galleryTrack');
+let isDragging = false;
+let dragStart = 0;
+let scrollStart = 0;
+let animOffset = 0;
+
+// Read current animation translation
+function getTrackX() {
+  const st = window.getComputedStyle(galleryTrack);
+  const mx = new DOMMatrix(st.transform);
+  return mx.m41;
+}
+
+galleryWrap.addEventListener('mousedown', e => {
+  isDragging = true;
+  dragStart = e.clientX;
+  animOffset = getTrackX();
+  galleryWrap.classList.add('dragging');
+  galleryTrack.style.transition = 'none';
+  galleryTrack.style.animation = 'none';
+  galleryTrack.style.transform = `translateX(${animOffset}px)`;
+});
+
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const dx = e.clientX - dragStart;
+  let newX = animOffset + dx;
+  // wrap bounds
+  const half = galleryTrack.scrollWidth / 2;
+  if (newX < -half) newX += half;
+  if (newX > 0) newX -= half;
+  galleryTrack.style.transform = `translateX(${newX}px)`;
+});
+
+window.addEventListener('mouseup', e => {
+  if (!isDragging) return;
+  isDragging = false;
+  galleryWrap.classList.remove('dragging');
+  // resume animation from current position
+  const currentX = getTrackX();
+  const half = galleryTrack.scrollWidth / 2;
+  const pct = Math.abs(currentX / half) * 100;
+  galleryTrack.style.animation = '';
+  galleryTrack.style.transform = '';
+  // re-trigger with adjusted timing
+  galleryTrack.style.animationDelay = `-${(pct / 100) * 30}s`;
+});
+
+// Touch support for gallery
+galleryWrap.addEventListener('touchstart', e => {
+  dragStart = e.touches[0].clientX;
+  animOffset = getTrackX();
+  galleryWrap.classList.add('dragging');
+  galleryTrack.style.transition = 'none';
+  galleryTrack.style.animation = 'none';
+  galleryTrack.style.transform = `translateX(${animOffset}px)`;
+}, { passive: true });
+
+galleryWrap.addEventListener('touchmove', e => {
+  const dx = e.touches[0].clientX - dragStart;
+  let newX = animOffset + dx;
+  const half = galleryTrack.scrollWidth / 2;
+  if (newX < -half) newX += half;
+  if (newX > 0) newX -= half;
+  galleryTrack.style.transform = `translateX(${newX}px)`;
+}, { passive: true });
+
+galleryWrap.addEventListener('touchend', () => {
+  galleryWrap.classList.remove('dragging');
+  galleryTrack.style.animation = '';
+  galleryTrack.style.transform = '';
+});
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.service-card, .stat-item, .award-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(28px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+// Stagger service cards
+document.querySelectorAll('.service-card').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.08}s`;
+});
+</script>
+</body>
+</html>
